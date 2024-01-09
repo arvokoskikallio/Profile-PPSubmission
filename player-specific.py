@@ -6,9 +6,6 @@ import json
 # -*- coding: utf-8 -*-
 
 def appendEntry(date, name, track, time, flap, glitch, video):
-    if(otherInfo == "Unknown ("):
-        otherInfo = "Unknown"
-
     timeArr = time.replace("\"","'").split("'")
     data = {"date": date, "name": name, "track": track, "m": int(timeArr[0]), "s": int(timeArr[1]), "ms": int(timeArr[2]), "flap": flap, "glitch": glitch, "video": video}
     times.append(data)
@@ -75,6 +72,8 @@ for i in range (1765):
     splicer = strip_tags(x[5])
     splice = splicer.split("\n")
     otherInfo = splice[1]
+    if(otherInfo == "Unknown ("):
+        otherInfo = "Unknown"
 
     splicer = strip_tags(x[6])
     splice = splicer.split("\n")
