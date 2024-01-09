@@ -1,7 +1,0 @@
-<table cellspacing="5" class="prof">
-<tr><td class="profl">Player's Name</td><td class="profr">Alex Penev</td></tr>
-<tr><td class="profl">Country</td><td class="profr">Australia</td></tr>
-<tr><td class="profl">Town/Region</td><td class="profr">Sydney</td></tr>
-<tr><td class="profl">Email</td><td class="profr">spenev<span class="g">&lt;at&gt;</span>yahoo<span class="g">&lt;dot&gt;</span>com</td></tr>
-<tr><td class="profl">Other Info</td><td class="profr">FC: 2234-7864-2019</td></tr>
-<tr><td class="profl">Proof status</td><td class="profr"><a href="proof.php">Trusted</a></td></tr> </table>
