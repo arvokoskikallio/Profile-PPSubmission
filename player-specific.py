@@ -38,7 +38,7 @@ f.write("[")
 f.close()
 
 urlBase = "https://www.mariokart64.com/mkw/profile.php?pid="
-for i in range (1765):
+for i in range (1, 1765):
     url = urlBase + str(i)
     source = urllib.request.urlopen(url).read()
     soup = bs.BeautifulSoup(source,'lxml')
