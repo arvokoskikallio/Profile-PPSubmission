@@ -5,10 +5,16 @@ import urllib.request
 import json
 # -*- coding: utf-8 -*-
 
-def appendEntry(date, name, track, time, flap, glitch):
+def appendEntry(date, name, track, time, flap, glitch, video):
     timeArr = time.replace("\"","'").split("'")
-    data = {"date": date, "name": name, "track": track, "m": int(timeArr[0]), "s": int(timeArr[1]), "ms": int(timeArr[2]), "flap": flap, "glitch": glitch}
-    everything.append(data)
+    data = {"date": date, "name": name, "track": track, "m": int(timeArr[0]), "s": int(timeArr[1]), "ms": int(timeArr[2]), "flap": flap, "glitch": glitch, "video": video}
+    times.append(data)
+
+def findVideo(rowString):
+  soup = bs.BeautifulSoup(rowString)
+  for link in soup.findAll('a'):
+    if("http//:" in str(link.get("href")) or "https://" in str(link.get("href"))):
+      return link.get("href")
 
 class MLStripper(HTMLParser):
     def __init__(self):
@@ -31,6 +37,9 @@ f = open("output.json", "w")
 f.write("")
 f.close()
 
+#urlBase = "https://www.mariokart64.com/mkw/profile.php?pid="
+#for(i in range 1763):
+#url = urlBase + i
 
 url = input("Enter the URL of the profile: ")
 source = urllib.request.urlopen(url).read()
@@ -38,17 +47,45 @@ soup = bs.BeautifulSoup(source,'lxml')
 table = soup.find_all('table')
 nosc=table[-3]
 glitch=table[-5]
+info=table[-7]
 print(nosc, file=open("nosc.txt", "w", encoding='utf-8'))
 print(glitch, file=open("glitch.txt", "w", encoding='utf-8')) 
+print(info, file=open("info.txt", "w", encoding='utf-8')) 
 
-everything = []
+profile = {}
+f = open("info.txt", "r")
+info = f.read()
+x = info.split("\n")
 
+splicer = strip_tags(x[1])
+splice = splicer.split("\n")
+name = splice[1]
 
+splicer = strip_tags(x[2])
+splice = splicer.split("\n")
+country = splice[1]
 
+splicer = strip_tags(x[3])
+splice = splicer.split("\n")
+town = splice[1]
 
-	
+splicer = strip_tags(x[4])
+splice = splicer.split("\n")
+email = splice[1]
+
+splicer = strip_tags(x[5])
+splice = splicer.split("\n")
+otherInfo = splice[1]
+
+splicer = strip_tags(x[6])
+splice = splicer.split("\n")
+proofStatus = splice[1]
+
+info = {"name": name, "country": country, "town": town, "email": email, "otherInfo": otherInfo, "proofStatus": proofStatus}
+profile["info"] = info
+
+times = []
 ############################### Practical code ######################################## DO NOT TOUCH IT WORKS OK
-name = input("Enter Name of the player: ")
 f = open("nosc.txt", "r")
 nosc = f.read()
 x = nosc.split("\n")
@@ -58,11 +95,17 @@ for i in range(2):
  splice = splicer.split("\n")
  
  if i == 0:
-   if "-" in splice[14]:
-    appendEntry(splice[14], name, "Luigi Circuit", splice[8], False, False)
+   if "-" in splice[14] and "/" in splice[13]:
+    video = findVideo(x[i+1])
+    appendEntry(splice[14], name, "Luigi Circuit", splice[8], False, False, video)
+   else:
+    appendEntry(splice[13], name, "Luigi Circuit", splice[8], False, False, "")
  if i == 1:
-   if "-" in splice[6]: 
-    appendEntry(splice[6], name, "Luigi Circuit", splice[1], True, False)
+   if "-" in splice[6] and "/" in splice[5]: 
+    video = findVideo(x[i+1])
+    appendEntry(splice[6], name, "Luigi Circuit", splice[1], True, False, video)
+   else:
+    appendEntry(splice[5], name, "Luigi Circuit", splice[1], True, False, "")
 
 counter = 1
 
@@ -73,19 +116,25 @@ for i in range(62):
  
  if (counter % 2) == 0:
   track = splice[0]
-  if "-" in splice[7]: 
-    appendEntry(splice[7], name, track, splice[1], False, False)
+  if "-" in splice[7] and "/" in splice[6]: 
+    video = findVideo(x[i+3])
+    appendEntry(splice[7], name, track, splice[1], False, False, video)
+  else:
+    appendEntry(splice[6], name, track, splice[1], False, False, "")
   
  else:
-  if "-" in splice[6]:
-    appendEntry(splice[6], name, track, splice[1], True, False)
+  if "-" in splice[6] and "/" in splice[5]:
+    video = findVideo(x[i+3])
+    appendEntry(splice[6], name, track, splice[1], True, False, video)
+  else:
+    appendEntry(splice[5], name, track, splice[1], True, False, "")
  
 g = open("glitch.txt", "r")
 glitchtable = g.read()
 y = glitchtable.split("\n")
 gcounter = 1
  
-for i in range(63):
+for i in range(62):
  gsplicer = strip_tags(y[i+3]) 
  gsplice = gsplicer.split("\n")
  
@@ -98,14 +147,22 @@ for i in range(63):
   track = gsplice[0]
   
   if gsplice[1] != splice[1]:
-   if "-" in gsplice[7]: 
-    appendEntry(gsplice[7], name, track, gsplice[1], False, True)
+   if "-" in gsplice[7] and "/" in gsplice[6]: 
+    video = findVideo(y[i+3])
+    appendEntry(gsplice[7], name, track, gsplice[1], False, True, video)
+   else:
+    appendEntry(gsplice[6], name, track, gsplice[1], False, True, "")
   
  else:
   if gsplice[1] != splice[1]:
-   if "-" in gsplice[6]:
-    appendEntry(gsplice[6], name, track, gsplice[1], True, True)
+   if "-" in gsplice[6] and "/" in gsplice[5]:
+    video = findVideo(y[i+3])
+    appendEntry(gsplice[6], name, track, gsplice[1], True, True, video)
+   else:
+    appendEntry(gsplice[5], name, track, gsplice[1], True, True, "")
 
-f = open("output.json", "w")
-f.write(json.dumps(everything))
+profile["times"] = times
+
+f = open("output.json", "a")
+f.write(json.dumps(profile))
 f.close()
