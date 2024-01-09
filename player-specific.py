@@ -2,8 +2,13 @@ from io import StringIO
 from html.parser import HTMLParser
 import bs4 as bs
 import urllib.request
-import lxml
+import json
 # -*- coding: utf-8 -*-
+
+def appendEntry(date, name, track, time, flap, glitch):
+    timeArr = time.replace("\"","'").split("'")
+    data = {"date": date, "name": name, "track": track, "m": int(timeArr[0]), "s": int(timeArr[1]), "ms": int(timeArr[2]), "flap": flap, "glitch": glitch}
+    everything.append(data)
 
 class MLStripper(HTMLParser):
     def __init__(self):
@@ -21,8 +26,8 @@ def strip_tags(html):
     s = MLStripper()
     s.feed(html)
     return s.get_data()
-	
-f = open("output.txt", "w")
+
+f = open("output.json", "w")
 f.write("")
 f.close()
 
@@ -35,6 +40,8 @@ nosc=table[-3]
 glitch=table[-5]
 print(nosc, file=open("nosc.txt", "w", encoding='utf-8'))
 print(glitch, file=open("glitch.txt", "w", encoding='utf-8')) 
+
+everything = []
 
 
 
@@ -51,14 +58,11 @@ for i in range(2):
  splice = splicer.split("\n")
  
  if i == 0:
-   if "-" in splice[13]:
-    print("Date: " + splice[13] + "\nName: " + name + "\n\n" + 'Luigi Circuit nosc: ' + splice[8] + " ", file=open("output.txt", "a"))
-    print(" ", file=open("output.txt", "a"))
-	
+   if "-" in splice[14]:
+    appendEntry(splice[14], name, "Luigi Circuit", splice[8], False, False)
  if i == 1:
-   if "-" in splice[5]: 
-    print("Date: " + splice[5] + "\nName: " + name + "\n\n" + "Luigi Circuit nosc flap: " + splice[1] + " ", file=open("output.txt", "a"))
-    print(" ", file=open("output.txt", "a"))
+   if "-" in splice[6]: 
+    appendEntry(splice[6], name, "Luigi Circuit", splice[1], True, False)
 
 counter = 1
 
@@ -69,20 +73,16 @@ for i in range(62):
  
  if (counter % 2) == 0:
   track = splice[0]
-  if "-" in splice[6]: 
-   print("\nDate: " + splice[6] + "\nName: " + name + "\n\n" + track + " nosc: " + splice[1] + " ", file=open("output.txt", "a"))
-   print(" ", file=open("output.txt", "a"))
+  if "-" in splice[7]: 
+    appendEntry(splice[7], name, track, splice[1], False, False)
   
  else:
-  if "-" in splice[5]:
-   print("\nDate: " + splice[5] + "\nName: " + name + "\n\n" + track + " nosc flap: " + splice[1] + " ", file=open("output.txt", "a"))
-   print(" ", file=open("output.txt", "a"))
+  if "-" in splice[6]:
+    appendEntry(splice[6], name, track, splice[1], True, False)
  
 g = open("glitch.txt", "r")
 glitchtable = g.read()
 y = glitchtable.split("\n")
-
-print("\n\nGlitch times:\n", file=open("output.txt", "a")) 
 gcounter = 1
  
 for i in range(63):
@@ -98,14 +98,14 @@ for i in range(63):
   track = gsplice[0]
   
   if gsplice[1] != splice[1]:
-   if "-" in gsplice[6]: 
-    print("\nDate: " + gsplice[6] + "\nName: " + name + "\n\n" + track + " g: " + gsplice[1] + " ", file=open("output.txt", "a"))
-    print(" ", file=open("output.txt", "a"))
+   if "-" in gsplice[7]: 
+    appendEntry(gsplice[7], name, track, gsplice[1], False, True)
   
  else:
   if gsplice[1] != splice[1]:
-   if "-" in gsplice[5]:
-    print("\nDate: " + gsplice[5] + "\nName: " + name + "\n\n" + track + " g flap: " + gsplice[1] + " ", file=open("output.txt", "a"))
-    print(" ", file=open("output.txt", "a"))
+   if "-" in gsplice[6]:
+    appendEntry(gsplice[6], name, track, gsplice[1], True, True)
 
+f = open("output.json", "w")
+f.write(json.dumps(everything))
 f.close()
