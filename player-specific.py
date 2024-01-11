@@ -38,7 +38,7 @@ f.write("[")
 f.close()
 
 urlBase = "https://www.mariokart64.com/mkw/profile.php?pid="
-for i in range (1118, 1119):
+for i in range (1, 1765):
     url = urlBase + str(i)
     source = urllib.request.urlopen(url).read()
     soup = bs.BeautifulSoup(source,'lxml')
@@ -91,7 +91,6 @@ for i in range (1118, 1119):
     for i in range(2):
         splicer = strip_tags(x[i+1])
         splice = splicer.split("\n")
-        
         if i == 0:
             if(splice[8] == "NT"):
                 continue
