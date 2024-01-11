@@ -1,0 +1,7 @@
+<table cellspacing="5" class="prof">
+<tr><td class="profl">Player's Name</td><td class="profr">Jeffrey Eric Gutierrez</td></tr>
+<tr><td class="profl">Country</td><td class="profr">USA</td></tr>
+<tr><td class="profl">Town/Region</td><td class="profr">Illinois</td></tr>
+<tr><td class="profl">Email</td><td class="profr">jeffreyeric<span class="g">&lt;at&gt;</span>gmail<span class="g">&lt;dot&gt;</span>com</td></tr>
+<tr><td class="profl">Other Info</td><td class="profr">Unknown</td></tr>
+<tr><td class="profl">Proof status</td><td class="profr"><a href="proof.php">No proof</a></td></tr> </table>

@@ -38,7 +38,7 @@ f.write("[")
 f.close()
 
 urlBase = "https://www.mariokart64.com/mkw/profile.php?pid="
-for i in range (1, 1765):
+for i in range (1118, 1119):
     url = urlBase + str(i)
     source = urllib.request.urlopen(url).read()
     soup = bs.BeautifulSoup(source,'lxml')
@@ -117,18 +117,19 @@ for i in range (1, 1765):
         splicer = strip_tags(x[i+3]) 
         splice = splicer.split("\n")
         counter+=1
-        if(splice[1] == "NT"):
-            continue
         
         if (counter % 2) == 0:
             track = splice[0]
+            if(splice[1] == "NT"):
+                continue
             if "-" in splice[6] and "/" in splice[5]: 
                 appendEntry(splice[6], name, track, splice[1], False, False, "")
             else:
                 video = findVideo(x[i+3])
                 appendEntry(splice[7], name, track, splice[1], False, False, video)
-            
         else:
+            if(splice[1] == "NT"):
+                continue
             if "-" in splice[5] and "/" in splice[4]:
                 appendEntry(splice[5], name, track, splice[1], True, False, "")
             else:
@@ -149,20 +150,19 @@ for i in range (1, 1765):
         
         gcounter+=1
         
-        if(gsplice[1] == "NT"):
-            continue
-        
         if (gcounter % 2) == 0:
             track = gsplice[0]
-            
+            if(gsplice[1] == "NT"):
+                continue
             if gsplice[1] != splice[1]:
                 if "-" in gsplice[6] and "/" in gsplice[5]: 
                     appendEntry(gsplice[6], name, track, gsplice[1], False, True, "")
                 else:
                     video = findVideo(y[i+3])
                     appendEntry(gsplice[7], name, track, gsplice[1], False, True, video)
-                
         else:
+            if(gsplice[1] == "NT"):
+                continue
             if gsplice[1] != splice[1]:
                 if "-" in gsplice[5] and "/" in gsplice[4]:
                     appendEntry(gsplice[5], name, track, gsplice[1], True, True, "")
